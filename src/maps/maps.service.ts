@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { min } from 'rxjs';
+import { PrismaService } from '../prisma.service.js';
 
 interface PositionAndTime {
   latitude: number;
@@ -27,7 +28,10 @@ interface TripDetails {
 
 @Injectable()
 export class MapsService {
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {
     this.apiKey = this.configService.get<string>('GOOGLE_MAPS_KEY');
   }
   private readonly apiKey: string | undefined;
@@ -203,22 +207,51 @@ export class MapsService {
   }
 
   //  City → coordinates
-  async geocodeCity(city: string) {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      city,
-    )}&key=${this.apiKey}`;
+  //   async geocodeCity(city: string) {
+  //     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+  //       city,
+  //     )}&key=${this.apiKey}`;
 
-    const res = await fetch(url);
-    const data = await res.json();
-    // console.log(res);
+  //     const res = await fetch(url);
+  //     const data = await res.json();
+  //     // console.log(res);
 
-    if (!data.results?.length) {
-      throw new Error(`City not found: ${city}`);
-    }
+  //     if (!data.results?.length) {
+  //       throw new Error(`City not found: ${city}`);
+  //     }
 
-    console.log(
-      `${city} cordinates are ${JSON.stringify(data.results[0].geometry.location)}`,
+  //     console.log(
+  //       `${city} cordinates are ${JSON.stringify(data.results[0].geometry.location)}`,
+  //     );
+  //     return data.results[0].geometry.location; // { lat, lng }
+  //   }
+
+  async addGeocodsIntoTripTimeDetails(tripDetails: any) {
+    const addedCordination = await Promise.all(
+      tripDetails.TripTimeWithCity.map(async (eachTripTime: any) => {
+        const cityName = await this.prisma.city.findUnique({
+          where: { cityId: eachTripTime.cityId },
+        });
+        console.log(cityName);
+
+        if (cityName) {
+          const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+            cityName?.name,
+          )}&key=${this.apiKey}`;
+
+          const res = await fetch(url);
+          const data = await res.json();
+          if (!data.results?.length) {
+            throw new Error(`City not found: ${cityName?.name}`);
+          }
+
+          const location = data.results[0].geometry; // { lat, lng }
+          return { ...eachTripTime, location };
+        }
+        return eachTripTime;
+      }),
     );
-    return data.results[0].geometry.location; // { lat, lng }
+    console.log(addedCordination);
+    return { ...tripDetails, TripTimeWithCity: addedCordination };
   }
 }

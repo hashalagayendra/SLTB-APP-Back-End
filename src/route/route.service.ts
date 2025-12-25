@@ -113,17 +113,21 @@ export class RouteService {
 
     console.log(`trips are ${JSON.stringify(sortedTrip)}`);
 
+    //Add cordination into TripTimeWithCity array
+    const addCordinationsIntoTrip =
+      await this.mapsService.addGeocodsIntoTripTimeDetails(sortedTrip);
+
+    console.log('cordinated sorted list', addCordinationsIntoTrip);
+    //get nearest bounds
     const time = new Date();
     const hours = time.getHours();
     const mins = time.getMinutes();
-
-    //get nearest bounds
 
     const nearestBoundsWithFinalData = await this.mapsService.findNearestBounds(
       {
         hours,
         mins,
-        tripData: sortedTrip,
+        tripData: await addCordinationsIntoTrip,
       },
     );
 

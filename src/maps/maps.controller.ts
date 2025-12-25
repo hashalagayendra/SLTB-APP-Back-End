@@ -62,10 +62,10 @@ export class MapsController {
   //     return presentage;
   //   }
 
-  @Post('getRouteCoordinatesUsingCityName')
-  async getRouteCoordinatesUsingCityName(@Body('city') city: string) {
-    console.log('data is ', city);
-    const res = await this.MapsService.geocodeCity(city);
-    return res;
-  }
+  //   @Post('getRouteCoordinatesUsingCityName')
+  //   async getRouteCoordinatesUsingCityName(@Body('city') city: string) {
+  //     console.log('data is ', city);
+  //     const res = await this.MapsService.geocodeCity(city);
+  //     return res;
+  //   }
 }
