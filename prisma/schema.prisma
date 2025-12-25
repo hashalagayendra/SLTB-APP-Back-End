@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  // moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model City {
+  cityId           Int                @id @default(autoincrement())
+  name             String
+  TripTimeWithCity TripTimeWithCity[]
+  Route            Route[]
+}
+
+model Route {
+  routeId String @id
+  name    String
+  Trip    Trip[]
+  City    City[]
+}
+
+model Trip {
+  tripId           Int                @id @default(autoincrement())
+  routeId          String?
+  tripName         String
+  Route            Route?             @relation(fields: [routeId], references: [routeId])
+  TripTimeWithCity TripTimeWithCity[]
+}
+
+model TripTimeWithCity {
+  tripTimeWithCityId Int  @id @default(autoincrement())
+  tripId             Int
+  cityId             Int
+  hours              Int
+  mins               Int
+  City               City @relation(fields: [cityId], references: [cityId])
+  Trip               Trip @relation(fields: [tripId], references: [tripId])
+}
