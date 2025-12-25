@@ -30,6 +30,7 @@ export type TripTimeWithCityAvgAggregateOutputType = {
   tripTimeWithCityId: number | null
   tripId: number | null
   cityId: number | null
+  days: number | null
   hours: number | null
   mins: number | null
 }
@@ -38,6 +39,7 @@ export type TripTimeWithCitySumAggregateOutputType = {
   tripTimeWithCityId: number | null
   tripId: number | null
   cityId: number | null
+  days: number | null
   hours: number | null
   mins: number | null
 }
@@ -46,6 +48,7 @@ export type TripTimeWithCityMinAggregateOutputType = {
   tripTimeWithCityId: number | null
   tripId: number | null
   cityId: number | null
+  days: number | null
   hours: number | null
   mins: number | null
 }
@@ -54,6 +57,7 @@ export type TripTimeWithCityMaxAggregateOutputType = {
   tripTimeWithCityId: number | null
   tripId: number | null
   cityId: number | null
+  days: number | null
   hours: number | null
   mins: number | null
 }
@@ -62,6 +66,7 @@ export type TripTimeWithCityCountAggregateOutputType = {
   tripTimeWithCityId: number
   tripId: number
   cityId: number
+  days: number
   hours: number
   mins: number
   _all: number
@@ -72,6 +77,7 @@ export type TripTimeWithCityAvgAggregateInputType = {
   tripTimeWithCityId?: true
   tripId?: true
   cityId?: true
+  days?: true
   hours?: true
   mins?: true
 }
@@ -80,6 +86,7 @@ export type TripTimeWithCitySumAggregateInputType = {
   tripTimeWithCityId?: true
   tripId?: true
   cityId?: true
+  days?: true
   hours?: true
   mins?: true
 }
@@ -88,6 +95,7 @@ export type TripTimeWithCityMinAggregateInputType = {
   tripTimeWithCityId?: true
   tripId?: true
   cityId?: true
+  days?: true
   hours?: true
   mins?: true
 }
@@ -96,6 +104,7 @@ export type TripTimeWithCityMaxAggregateInputType = {
   tripTimeWithCityId?: true
   tripId?: true
   cityId?: true
+  days?: true
   hours?: true
   mins?: true
 }
@@ -104,6 +113,7 @@ export type TripTimeWithCityCountAggregateInputType = {
   tripTimeWithCityId?: true
   tripId?: true
   cityId?: true
+  days?: true
   hours?: true
   mins?: true
   _all?: true
@@ -199,6 +209,7 @@ export type TripTimeWithCityGroupByOutputType = {
   tripTimeWithCityId: number
   tripId: number
   cityId: number
+  days: number | null
   hours: number
   mins: number
   _count: TripTimeWithCityCountAggregateOutputType | null
@@ -230,6 +241,7 @@ export type TripTimeWithCityWhereInput = {
   tripTimeWithCityId?: Prisma.IntFilter<"TripTimeWithCity"> | number
   tripId?: Prisma.IntFilter<"TripTimeWithCity"> | number
   cityId?: Prisma.IntFilter<"TripTimeWithCity"> | number
+  days?: Prisma.IntNullableFilter<"TripTimeWithCity"> | number | null
   hours?: Prisma.IntFilter<"TripTimeWithCity"> | number
   mins?: Prisma.IntFilter<"TripTimeWithCity"> | number
   City?: Prisma.XOR<Prisma.CityScalarRelationFilter, Prisma.CityWhereInput>
@@ -240,6 +252,7 @@ export type TripTimeWithCityOrderByWithRelationInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrderInput | Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
   City?: Prisma.CityOrderByWithRelationInput
@@ -253,6 +266,7 @@ export type TripTimeWithCityWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TripTimeWithCityWhereInput | Prisma.TripTimeWithCityWhereInput[]
   tripId?: Prisma.IntFilter<"TripTimeWithCity"> | number
   cityId?: Prisma.IntFilter<"TripTimeWithCity"> | number
+  days?: Prisma.IntNullableFilter<"TripTimeWithCity"> | number | null
   hours?: Prisma.IntFilter<"TripTimeWithCity"> | number
   mins?: Prisma.IntFilter<"TripTimeWithCity"> | number
   City?: Prisma.XOR<Prisma.CityScalarRelationFilter, Prisma.CityWhereInput>
@@ -263,6 +277,7 @@ export type TripTimeWithCityOrderByWithAggregationInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrderInput | Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
   _count?: Prisma.TripTimeWithCityCountOrderByAggregateInput
@@ -279,11 +294,13 @@ export type TripTimeWithCityScalarWhereWithAggregatesInput = {
   tripTimeWithCityId?: Prisma.IntWithAggregatesFilter<"TripTimeWithCity"> | number
   tripId?: Prisma.IntWithAggregatesFilter<"TripTimeWithCity"> | number
   cityId?: Prisma.IntWithAggregatesFilter<"TripTimeWithCity"> | number
+  days?: Prisma.IntNullableWithAggregatesFilter<"TripTimeWithCity"> | number | null
   hours?: Prisma.IntWithAggregatesFilter<"TripTimeWithCity"> | number
   mins?: Prisma.IntWithAggregatesFilter<"TripTimeWithCity"> | number
 }
 
 export type TripTimeWithCityCreateInput = {
+  days?: number | null
   hours: number
   mins: number
   City: Prisma.CityCreateNestedOneWithoutTripTimeWithCityInput
@@ -294,11 +311,13 @@ export type TripTimeWithCityUncheckedCreateInput = {
   tripTimeWithCityId?: number
   tripId: number
   cityId: number
+  days?: number | null
   hours: number
   mins: number
 }
 
 export type TripTimeWithCityUpdateInput = {
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
   City?: Prisma.CityUpdateOneRequiredWithoutTripTimeWithCityNestedInput
@@ -309,6 +328,7 @@ export type TripTimeWithCityUncheckedUpdateInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   tripId?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -317,11 +337,13 @@ export type TripTimeWithCityCreateManyInput = {
   tripTimeWithCityId?: number
   tripId: number
   cityId: number
+  days?: number | null
   hours: number
   mins: number
 }
 
 export type TripTimeWithCityUpdateManyMutationInput = {
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -330,6 +352,7 @@ export type TripTimeWithCityUncheckedUpdateManyInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   tripId?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -348,6 +371,7 @@ export type TripTimeWithCityCountOrderByAggregateInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
 }
@@ -356,6 +380,7 @@ export type TripTimeWithCityAvgOrderByAggregateInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
 }
@@ -364,6 +389,7 @@ export type TripTimeWithCityMaxOrderByAggregateInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
 }
@@ -372,6 +398,7 @@ export type TripTimeWithCityMinOrderByAggregateInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
 }
@@ -380,6 +407,7 @@ export type TripTimeWithCitySumOrderByAggregateInput = {
   tripTimeWithCityId?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
+  days?: Prisma.SortOrder
   hours?: Prisma.SortOrder
   mins?: Prisma.SortOrder
 }
@@ -468,7 +496,16 @@ export type TripTimeWithCityUncheckedUpdateManyWithoutTripNestedInput = {
   deleteMany?: Prisma.TripTimeWithCityScalarWhereInput | Prisma.TripTimeWithCityScalarWhereInput[]
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type TripTimeWithCityCreateWithoutCityInput = {
+  days?: number | null
   hours: number
   mins: number
   Trip: Prisma.TripCreateNestedOneWithoutTripTimeWithCityInput
@@ -477,6 +514,7 @@ export type TripTimeWithCityCreateWithoutCityInput = {
 export type TripTimeWithCityUncheckedCreateWithoutCityInput = {
   tripTimeWithCityId?: number
   tripId: number
+  days?: number | null
   hours: number
   mins: number
 }
@@ -514,11 +552,13 @@ export type TripTimeWithCityScalarWhereInput = {
   tripTimeWithCityId?: Prisma.IntFilter<"TripTimeWithCity"> | number
   tripId?: Prisma.IntFilter<"TripTimeWithCity"> | number
   cityId?: Prisma.IntFilter<"TripTimeWithCity"> | number
+  days?: Prisma.IntNullableFilter<"TripTimeWithCity"> | number | null
   hours?: Prisma.IntFilter<"TripTimeWithCity"> | number
   mins?: Prisma.IntFilter<"TripTimeWithCity"> | number
 }
 
 export type TripTimeWithCityCreateWithoutTripInput = {
+  days?: number | null
   hours: number
   mins: number
   City: Prisma.CityCreateNestedOneWithoutTripTimeWithCityInput
@@ -527,6 +567,7 @@ export type TripTimeWithCityCreateWithoutTripInput = {
 export type TripTimeWithCityUncheckedCreateWithoutTripInput = {
   tripTimeWithCityId?: number
   cityId: number
+  days?: number | null
   hours: number
   mins: number
 }
@@ -560,11 +601,13 @@ export type TripTimeWithCityUpdateManyWithWhereWithoutTripInput = {
 export type TripTimeWithCityCreateManyCityInput = {
   tripTimeWithCityId?: number
   tripId: number
+  days?: number | null
   hours: number
   mins: number
 }
 
 export type TripTimeWithCityUpdateWithoutCityInput = {
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
   Trip?: Prisma.TripUpdateOneRequiredWithoutTripTimeWithCityNestedInput
@@ -573,6 +616,7 @@ export type TripTimeWithCityUpdateWithoutCityInput = {
 export type TripTimeWithCityUncheckedUpdateWithoutCityInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   tripId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -580,6 +624,7 @@ export type TripTimeWithCityUncheckedUpdateWithoutCityInput = {
 export type TripTimeWithCityUncheckedUpdateManyWithoutCityInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   tripId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -587,11 +632,13 @@ export type TripTimeWithCityUncheckedUpdateManyWithoutCityInput = {
 export type TripTimeWithCityCreateManyTripInput = {
   tripTimeWithCityId?: number
   cityId: number
+  days?: number | null
   hours: number
   mins: number
 }
 
 export type TripTimeWithCityUpdateWithoutTripInput = {
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
   City?: Prisma.CityUpdateOneRequiredWithoutTripTimeWithCityNestedInput
@@ -600,6 +647,7 @@ export type TripTimeWithCityUpdateWithoutTripInput = {
 export type TripTimeWithCityUncheckedUpdateWithoutTripInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -607,6 +655,7 @@ export type TripTimeWithCityUncheckedUpdateWithoutTripInput = {
 export type TripTimeWithCityUncheckedUpdateManyWithoutTripInput = {
   tripTimeWithCityId?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.IntFieldUpdateOperationsInput | number
+  days?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hours?: Prisma.IntFieldUpdateOperationsInput | number
   mins?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -617,6 +666,7 @@ export type TripTimeWithCitySelect<ExtArgs extends runtime.Types.Extensions.Inte
   tripTimeWithCityId?: boolean
   tripId?: boolean
   cityId?: boolean
+  days?: boolean
   hours?: boolean
   mins?: boolean
   City?: boolean | Prisma.CityDefaultArgs<ExtArgs>
@@ -627,6 +677,7 @@ export type TripTimeWithCitySelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   tripTimeWithCityId?: boolean
   tripId?: boolean
   cityId?: boolean
+  days?: boolean
   hours?: boolean
   mins?: boolean
   City?: boolean | Prisma.CityDefaultArgs<ExtArgs>
@@ -637,6 +688,7 @@ export type TripTimeWithCitySelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   tripTimeWithCityId?: boolean
   tripId?: boolean
   cityId?: boolean
+  days?: boolean
   hours?: boolean
   mins?: boolean
   City?: boolean | Prisma.CityDefaultArgs<ExtArgs>
@@ -647,11 +699,12 @@ export type TripTimeWithCitySelectScalar = {
   tripTimeWithCityId?: boolean
   tripId?: boolean
   cityId?: boolean
+  days?: boolean
   hours?: boolean
   mins?: boolean
 }
 
-export type TripTimeWithCityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tripTimeWithCityId" | "tripId" | "cityId" | "hours" | "mins", ExtArgs["result"]["tripTimeWithCity"]>
+export type TripTimeWithCityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tripTimeWithCityId" | "tripId" | "cityId" | "days" | "hours" | "mins", ExtArgs["result"]["tripTimeWithCity"]>
 export type TripTimeWithCityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   City?: boolean | Prisma.CityDefaultArgs<ExtArgs>
   Trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
@@ -675,6 +728,7 @@ export type $TripTimeWithCityPayload<ExtArgs extends runtime.Types.Extensions.In
     tripTimeWithCityId: number
     tripId: number
     cityId: number
+    days: number | null
     hours: number
     mins: number
   }, ExtArgs["result"]["tripTimeWithCity"]>
@@ -1105,6 +1159,7 @@ export interface TripTimeWithCityFieldRefs {
   readonly tripTimeWithCityId: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
   readonly tripId: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
   readonly cityId: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
+  readonly days: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
   readonly hours: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
   readonly mins: Prisma.FieldRef<"TripTimeWithCity", 'Int'>
 }

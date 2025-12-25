@@ -12,11 +12,22 @@ export class RouteController {
     return 'dddd';
   }
 
-  @Post('getAllRouteIdsUsingStartAndEndCity')
-  async getAllRouteIdsUsingStartAndEndCity(
+  @Post('getAllRoutesThathroughStartAndEndCity')
+  async getAllRoutesThathroughStartAndEndCity(
     @Body('start') start: string,
     @Body('end') end: string,
   ) {
-    return this.routeService.getAllRouteIds(start, end);
+    return this.routeService.getAllRoute(start, end);
+  }
+
+  @Post('getTripBelongToRoute')
+  async getTripBelongToRoute(@Body('routeId') routeId: string) {
+    return this.routeService.getTripByRouteId(routeId);
+  }
+
+  @Post('getTripDetailsByTripId')
+  async getTripDetailsByTripId(@Body('tripId') tripId: number[]) {
+    console.log('incontralle ', tripId);
+    return this.routeService.TripDetails(tripId);
   }
 }

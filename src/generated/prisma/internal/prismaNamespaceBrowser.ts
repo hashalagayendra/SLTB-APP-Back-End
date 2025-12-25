@@ -102,6 +102,7 @@ export const TripTimeWithCityScalarFieldEnum = {
   tripTimeWithCityId: 'tripTimeWithCityId',
   tripId: 'tripId',
   cityId: 'cityId',
+  days: 'days',
   hours: 'hours',
   mins: 'mins'
 } as const

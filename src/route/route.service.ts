@@ -20,7 +20,7 @@ export class RouteService {
   }
 
   // get all route that parse through start and end city
-  async getAllRouteIds(start: string, end: string) {
+  async getAllRoute(start: string, end: string) {
     const route = await this.prisma.city.findMany({
       where: {
         name: {
@@ -71,6 +71,31 @@ export class RouteService {
     });
 
     return routesConnectBothCities;
+  }
+
+  async getTripByRouteId(routeId: string) {
+    const trips = await this.prisma.trip.findMany({
+      where: {
+        routeId: routeId,
+      },
+    });
+    console.log(`Trips for Route ID ${routeId}:`, trips);
+    return trips;
+  }
+
+  async TripDetails(tripId: number[]) {
+    console.log(tripId);
+
+    const trips = await this.prisma.trip.findMany({
+      where: {
+        tripId: { in: tripId },
+      },
+      include: { TripTimeWithCity: true },
+    });
+
+    console.log(`trips are ${trips}`);
+
+    return trips;
   }
 
   //   async getCityListForEachRouter(Route: Route[]) {

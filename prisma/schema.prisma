@@ -34,6 +34,7 @@ model TripTimeWithCity {
   tripTimeWithCityId Int  @id @default(autoincrement())
   tripId             Int
   cityId             Int
+  days               Int? @default(0)
   hours              Int
   mins               Int
   City               City @relation(fields: [cityId], references: [cityId])
