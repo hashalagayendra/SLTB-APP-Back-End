@@ -31,37 +31,36 @@ export class MapsController {
     };
   }
 
-  @Post('getBusPositionInNearestTwoPoints')
-  async getBusPositionInNearestTwoPoints(
-    @Body('hour') hour: number,
-    @Body('minute') minute: number,
-    @Body('tripId') tripId: string,
-  ): Promise<CoordinatesResponse> {
-    const coordinates = await this.MapsService.findNearestBounds({
-      hour,
-      minute,
-      tripId,
-    });
-    return {
-      coordinates,
-    };
-  }
+  //   @Post('getBusPositionInNearestTwoPoints')
+  //   async getBusPositionInNearestTwoPoints(
+  //     @Body('hour') hour: number,
+  //     @Body('minute') minute: number,
+  //     @Body('tripId') tripId: string,
+  //   ): Promise<CoordinatesResponse> {
+  //     const coordinates = await this.MapsService.findNearestBounds({
+  //       hour,
+  //       minute,
+  //     });
+  //     return {
+  //       coordinates,
+  //     };
+  //   }
 
-  @Post('getPercentageOfBusPositionBetweenTwoNearestPoints')
-  async getPercentage(
-    @Request() req,
-    @Body('nearestPastPoint') nearestPastPoint: any,
-    @Body('nearestFuturePoint') nearestFuturePoint: any,
-    @Body('userTime') userTime: { hour: number; minute: number },
-  ) {
-    console.log('data is ', nearestFuturePoint);
-    const presentage = await this.MapsService.presentageBetweenPoints(
-      nearestPastPoint,
-      nearestFuturePoint,
-      userTime,
-    );
-    return presentage;
-  }
+  //   @Post('getPercentageOfBusPositionBetweenTwoNearestPoints')
+  //   async getPercentage(
+  //     @Request() req,
+  //     @Body('nearestPastPoint') nearestPastPoint: any,
+  //     @Body('nearestFuturePoint') nearestFuturePoint: any,
+  //     @Body('userTime') userTime: { hour: number; minute: number },
+  //   ) {
+  //     console.log('data is ', nearestFuturePoint);
+  //     const presentage = await this.MapsService.presentageBetweenPoints(
+  //       nearestPastPoint,
+  //       nearestFuturePoint,
+  //       userTime,
+  //     );
+  //     return presentage;
+  //   }
 
   @Post('getRouteCoordinatesUsingCityName')
   async getRouteCoordinatesUsingCityName(@Body('city') city: string) {

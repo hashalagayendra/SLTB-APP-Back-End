@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { min } from 'rxjs';
 
 interface PositionAndTime {
   latitude: number;
@@ -26,66 +27,7 @@ interface TripDetails {
 
 @Injectable()
 export class MapsService {
-  constructor(
-    private configService: ConfigService,
-    // private apiKey: string | undefined = configService.get<string>(
-    //   'GOOGLE_MAPS_KEY',
-    // ),
-    // private busRote = [
-    //   {
-    //     positionAndTime: [
-    //       {
-    //         latitude: 7.271163330690157,
-    //         longitude: 80.60777527380574, // gatabe
-    //         time: { hour: 5, minute: 30 },
-    //         cityName: 'gatabe',
-    //       },
-    //       {
-    //         latitude: 7.265245739547621,
-    //         longitude: 80.54506299370561, // Pilimathalawa
-    //         time: { hour: 6, minute: 0 },
-    //         cityName: 'Pilimathalawa',
-    //       },
-
-    //       {
-    //         latitude: 7.011112,
-    //         longitude: 80.262852,
-    //         time: { hour: 8, minute: 0 },
-    //         cityName: 'Mawanella',
-    //       }, // Mawanella
-    //       {
-    //         latitude: 6.958462565701763,
-    //         longitude: 80.214786512875017, // awissawella
-    //         time: { hour: 9, minute: 0 },
-    //         cityName: 'awissawella',
-    //       },
-    //     ],
-    //     start: {
-    //       cityName: 'kandy',
-    //       latitude: 7.292473427823725,
-    //       longitude: 80.63122957801451,
-    //       time: { hour: 5, minute: 0 },
-    //     },
-    //     end: {
-    //       cityName: 'Rathnapura',
-    //       latitude: 6.722659835209608,
-    //       longitude: 80.3833579778542,
-    //       time: { hour: 10, minute: 0 },
-    //     },
-
-    //     citys: {
-    //       Kandy: 1,
-    //       Pilimathalawa: 2,
-    //       Mawanella: 3,
-    //       Kegalla: 4,
-    //       Ruwanwella: 5,
-    //       Anguruwella: 6,
-    //       Awissawella: 7,
-    //       Rathnapura: 8,
-    //     },
-    //   },
-    // ],
-  ) {
+  constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>('GOOGLE_MAPS_KEY');
   }
   private readonly apiKey: string | undefined;
@@ -109,8 +51,8 @@ export class MapsService {
   //     return coordinates;
   //   }
 
-  async timeToSeconds(time: { hour: number; minute: number }) {
-    return time.hour * 3600 + time.minute * 60;
+  async timeToSeconds(hours: number, mins: number) {
+    return hours * 3600 + mins * 60;
   }
 
   async getRouteDetails(tripId: string = 'bus-001'): Promise<TripDetails> {
@@ -159,23 +101,65 @@ export class MapsService {
     return tripDetails;
   }
 
-  async findNearestBounds(currentTimeAndPositionAndTime: {
-    hour: number;
-    minute: number;
-    tripId: string;
+  //   async findNearestBounds(currentTimeAndPositionAndTime: {
+  //     hour: number;
+  //     minute: number;
+  //     tripId: string;
+  //   }) {
+  //     const secondsOfCurrentTime = await this.timeToSeconds(
+  //       currentTimeAndPositionAndTime,
+  //     );
+  //     let minPastDiff = Number.POSITIVE_INFINITY;
+  //     let minFutureDiff = Number.POSITIVE_INFINITY;
+  //     let pastPosition: PositionAndTime | null = null;
+  //     let futurePosition: PositionAndTime | null = null;
+
+  //     const tripDetails = await this.getRouteDetails();
+
+  //     for (const eachPosition of tripDetails.positionAndTime) {
+  //       const secondsEachPosition = await this.timeToSeconds(eachPosition.time);
+  //       let diff = secondsOfCurrentTime - secondsEachPosition;
+  //       let futureDiff = secondsEachPosition - secondsOfCurrentTime;
+
+  //       // Past (lower bound)
+  //       if (diff >= 0 && diff < minPastDiff) {
+  //         minPastDiff = diff;
+  //         pastPosition = eachPosition;
+  //       }
+  //       // Future (upper bound)
+  //       if (futureDiff >= 0 && futureDiff < minFutureDiff) {
+  //         minFutureDiff = futureDiff;
+  //         futurePosition = eachPosition;
+  //       }
+  //     }
+
+  //     return { pastPosition, futurePosition };
+  //   }
+
+  async findNearestBounds(currentTimeTripData: {
+    hours: number;
+    mins: number;
+    tripData: any;
   }) {
+    console.log(currentTimeTripData);
     const secondsOfCurrentTime = await this.timeToSeconds(
-      currentTimeAndPositionAndTime,
+      currentTimeTripData.hours,
+      currentTimeTripData.mins,
     );
+    console.log(secondsOfCurrentTime);
     let minPastDiff = Number.POSITIVE_INFINITY;
     let minFutureDiff = Number.POSITIVE_INFINITY;
     let pastPosition: PositionAndTime | null = null;
     let futurePosition: PositionAndTime | null = null;
 
-    const tripDetails = await this.getRouteDetails();
+    for (const eachPosition of currentTimeTripData.tripData?.TripTimeWithCity) {
+      console.log(eachPosition);
+      const secondsEachPosition = await this.timeToSeconds(
+        eachPosition.hours,
+        eachPosition.mins,
+      );
 
-    for (const eachPosition of tripDetails.positionAndTime) {
-      const secondsEachPosition = await this.timeToSeconds(eachPosition.time);
+      console.log(secondsEachPosition);
       let diff = secondsOfCurrentTime - secondsEachPosition;
       let futureDiff = secondsEachPosition - secondsOfCurrentTime;
 
@@ -190,26 +174,28 @@ export class MapsService {
         futurePosition = eachPosition;
       }
     }
+    currentTimeTripData.tripData.pastPosition = pastPosition;
+    currentTimeTripData.tripData.futurePosition = futurePosition;
 
-    return { pastPosition, futurePosition };
+    return currentTimeTripData.tripData;
   }
 
-  async presentageBetweenPoints(
-    nearestPastPoint: any,
-    nearestFuturePoint: any,
-    userTime: any,
-  ) {
-    const userTimeInSeconds = await this.timeToSeconds(userTime);
-    const pastTimeInSeconds = await this.timeToSeconds(nearestPastPoint?.time);
-    console.log(nearestPastPoint?.time);
-    const futureTimeInSeconds = await this.timeToSeconds(
-      nearestFuturePoint?.time,
-    );
-    const presentage =
-      (userTimeInSeconds - pastTimeInSeconds) /
-      (futureTimeInSeconds - pastTimeInSeconds);
-    return presentage;
-  }
+  //   async presentageBetweenPoints(
+  //     nearestPastPoint: any,
+  //     nearestFuturePoint: any,
+  //     userTime: any,
+  //   ) {
+  //     const userTimeInSeconds = await this.timeToSeconds(userTime);
+  //     const pastTimeInSeconds = await this.timeToSeconds(nearestPastPoint?.time);
+  //     console.log(nearestPastPoint?.time);
+  //     const futureTimeInSeconds = await this.timeToSeconds(
+  //       nearestFuturePoint?.time,
+  //     );
+  //     const presentage =
+  //       (userTimeInSeconds - pastTimeInSeconds) /
+  //       (futureTimeInSeconds - pastTimeInSeconds);
+  //     return presentage;
+  //   }
 
   async testApi() {
     // const apiKey = this.configService.get<string>('GOOGLE_MAPS_KEY');

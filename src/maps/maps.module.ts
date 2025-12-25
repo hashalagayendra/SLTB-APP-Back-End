@@ -4,6 +4,7 @@ import { MapsController } from './maps.controller';
 import { PrismaService } from '../prisma.service.js';
 
 @Module({
+  exports: [MapsService],
   providers: [MapsService, PrismaService],
   controllers: [MapsController],
 })

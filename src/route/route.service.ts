@@ -3,11 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service.js';
 import { Route, Prisma } from '../generated/prisma/client.js';
 import { ConfigService } from '@nestjs/config';
+import { MapsService } from '../maps/maps.service.js';
 @Injectable()
 export class RouteService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
+    private mapsService: MapsService,
   ) {}
 
   async getRoutes() {
@@ -112,10 +114,20 @@ export class RouteService {
     console.log(`trips are ${JSON.stringify(sortedTrip)}`);
 
     const time = new Date();
-    const hour = time.getHours();
-    const minute = time.getMinutes();
+    const hours = time.getHours();
+    const mins = time.getMinutes();
 
-    return sortedTrip;
+    //get nearest bounds
+
+    const nearestBoundsWithFinalData = await this.mapsService.findNearestBounds(
+      {
+        hours,
+        mins,
+        tripData: sortedTrip,
+      },
+    );
+
+    return nearestBoundsWithFinalData;
   }
 
   //   async getCityListForEachRouter(Route: Route[]) {
