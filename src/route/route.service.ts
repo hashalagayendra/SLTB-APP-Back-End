@@ -83,19 +83,39 @@ export class RouteService {
     return trips;
   }
 
-  async TripDetails(tripId: number[]) {
+  async TripDetails(tripId: number) {
     console.log(tripId);
 
-    const trips = await this.prisma.trip.findMany({
+    const trip = await this.prisma.trip.findUnique({
       where: {
-        tripId: { in: tripId },
+        tripId,
       },
       include: { TripTimeWithCity: true },
     });
 
-    console.log(`trips are ${trips}`);
+    // Sort TripTimeWithCity for each trip by total time (days, hours, mins)
+    const sortedTrip = trip
+      ? {
+          ...trip,
+          TripTimeWithCity: trip.TripTimeWithCity
+            ? [...trip.TripTimeWithCity].sort((a, b) => {
+                const aTotal =
+                  (a.days ?? 0) * 24 * 60 + (a.hours ?? 0) * 60 + (a.mins ?? 0);
+                const bTotal =
+                  (b.days ?? 0) * 24 * 60 + (b.hours ?? 0) * 60 + (b.mins ?? 0);
+                return aTotal - bTotal;
+              })
+            : [],
+        }
+      : null;
 
-    return trips;
+    console.log(`trips are ${JSON.stringify(sortedTrip)}`);
+
+    const time = new Date();
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+
+    return sortedTrip;
   }
 
   //   async getCityListForEachRouter(Route: Route[]) {

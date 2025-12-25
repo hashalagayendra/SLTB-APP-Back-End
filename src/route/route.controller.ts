@@ -26,7 +26,7 @@ export class RouteController {
   }
 
   @Post('getTripDetailsByTripId')
-  async getTripDetailsByTripId(@Body('tripId') tripId: number[]) {
+  async getTripDetailsByTripId(@Body('tripId') tripId: number) {
     console.log('incontralle ', tripId);
     return this.routeService.TripDetails(tripId);
   }
