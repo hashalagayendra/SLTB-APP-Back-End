@@ -1,9 +1,11 @@
+import { Not } from './../generated/prisma/internal/prismaNamespace';
 import { start } from 'repl';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service.js';
 import { Route, Prisma } from '../generated/prisma/client.js';
 import { ConfigService } from '@nestjs/config';
 import { MapsService } from '../maps/maps.service.js';
+import { min } from 'rxjs';
 @Injectable()
 export class RouteService {
   constructor(
@@ -75,10 +77,13 @@ export class RouteService {
     return routesConnectBothCities;
   }
 
-  async getTripByRouteId(routeId: string) {
+  async getTripByRouteId(routeId: string[]) {
     const trips = await this.prisma.trip.findMany({
       where: {
-        routeId: routeId,
+        routeId: { in: routeId },
+      },
+      include: {
+        Route: true,
       },
     });
     console.log(`Trips for Route ID ${routeId}:`, trips);
@@ -92,7 +97,11 @@ export class RouteService {
       where: {
         tripId,
       },
-      include: { TripTimeWithCity: true },
+      include: {
+        TripTimeWithCity: {
+          include: { City: true },
+        },
+      },
     });
 
     // Sort TripTimeWithCity for each trip by total time (days, hours, mins)
@@ -113,7 +122,7 @@ export class RouteService {
 
     console.log(`trips are ${JSON.stringify(sortedTrip)}`);
 
-    //Add cordination into TripTimeWithCity array
+    // Add cordination into TripTimeWithCity array
     const addCordinationsIntoTrip =
       await this.mapsService.addGeocodsIntoTripTimeDetails(sortedTrip);
 
@@ -122,6 +131,8 @@ export class RouteService {
     const time = new Date();
     const hours = time.getHours();
     const mins = time.getMinutes();
+    // const hours = 10;
+    // const mins = 30;
 
     const nearestBoundsWithFinalData = await this.mapsService.findNearestBounds(
       {
@@ -130,6 +141,29 @@ export class RouteService {
         tripData: await addCordinationsIntoTrip,
       },
     );
+    // calculation prentage between two points
+    if (!nearestBoundsWithFinalData.pastPosition) {
+      nearestBoundsWithFinalData.runningStatus = 'Not_Started';
+    } else if (!nearestBoundsWithFinalData.futurePosition) {
+      nearestBoundsWithFinalData.runningStatus = 'Completed';
+    }
+    if (
+      nearestBoundsWithFinalData.pastPosition &&
+      nearestBoundsWithFinalData.futurePosition
+    ) {
+      nearestBoundsWithFinalData.runningStatus = 'Running';
+      const getPresentage = await this.mapsService.presentageBetweenPoints(
+        nearestBoundsWithFinalData.pastPosition,
+        nearestBoundsWithFinalData.futurePosition,
+        hours,
+        mins,
+      );
+
+      nearestBoundsWithFinalData.presentageInTrip = getPresentage;
+      console.log('presentage is', getPresentage);
+    } else {
+      console.log('not get neresest presentage becourse one boundery null');
+    }
 
     return nearestBoundsWithFinalData;
   }
@@ -146,4 +180,17 @@ export class RouteService {
   //     }
 
   //   }
+
+  async getCityListUsingRouteId(routeIds: string[]) {
+    const routeCities = await this.prisma.route.findMany({
+      where: {
+        routeId: { in: routeIds },
+      },
+      include: {
+        City: true,
+      },
+    });
+    console.log(routeCities);
+    return routeCities;
+  }
 }

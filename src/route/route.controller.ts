@@ -21,7 +21,7 @@ export class RouteController {
   }
 
   @Post('getTripBelongToRoute')
-  async getTripBelongToRoute(@Body('routeId') routeId: string) {
+  async getTripBelongToRoute(@Body('routeId') routeId: string[]) {
     return this.routeService.getTripByRouteId(routeId);
   }
 
@@ -29,5 +29,11 @@ export class RouteController {
   async getTripDetailsByTripId(@Body('tripId') tripId: number) {
     console.log('incontralle ', tripId);
     return this.routeService.TripDetails(tripId);
+  }
+
+  @Post('getCityListByRouteIds')
+  async getCityListByRouteIds(@Body('routeIds') routeIds: string[]) {
+    console.log('incontralle ', routeIds);
+    return this.routeService.getCityListUsingRouteId(routeIds);
   }
 }

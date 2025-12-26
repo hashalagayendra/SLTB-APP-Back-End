@@ -184,22 +184,27 @@ export class MapsService {
     return currentTimeTripData.tripData;
   }
 
-  //   async presentageBetweenPoints(
-  //     nearestPastPoint: any,
-  //     nearestFuturePoint: any,
-  //     userTime: any,
-  //   ) {
-  //     const userTimeInSeconds = await this.timeToSeconds(userTime);
-  //     const pastTimeInSeconds = await this.timeToSeconds(nearestPastPoint?.time);
-  //     console.log(nearestPastPoint?.time);
-  //     const futureTimeInSeconds = await this.timeToSeconds(
-  //       nearestFuturePoint?.time,
-  //     );
-  //     const presentage =
-  //       (userTimeInSeconds - pastTimeInSeconds) /
-  //       (futureTimeInSeconds - pastTimeInSeconds);
-  //     return presentage;
-  //   }
+  async presentageBetweenPoints(
+    pastPosition: any,
+    futurePosition: any,
+    hours: number,
+    mins: number,
+  ) {
+    const userTimeInSeconds = await this.timeToSeconds(hours, mins);
+    const pastTimeInSeconds = await this.timeToSeconds(
+      pastPosition?.hours,
+      pastPosition?.mins,
+    );
+    console.log(pastPosition?.time);
+    const futureTimeInSeconds = await this.timeToSeconds(
+      futurePosition?.hours,
+      futurePosition?.mins,
+    );
+    const presentage =
+      (userTimeInSeconds - pastTimeInSeconds) /
+      (futureTimeInSeconds - pastTimeInSeconds);
+    return presentage;
+  }
 
   async testApi() {
     // const apiKey = this.configService.get<string>('GOOGLE_MAPS_KEY');
