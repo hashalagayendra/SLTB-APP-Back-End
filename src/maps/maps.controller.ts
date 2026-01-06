@@ -68,4 +68,10 @@ export class MapsController {
   //     const res = await this.MapsService.geocodeCity(city);
   //     return res;
   //   }
+
+  @Post('getRoueDistance')
+  async getRoueDistance(@Body('cityList') cityList: any) {
+    console.log('incontralle ', cityList);
+    return this.MapsService.getRouteDistances(cityList);
+  }
 }

@@ -259,4 +259,54 @@ export class MapsService {
     console.log(addedCordination);
     return { ...tripDetails, TripTimeWithCity: addedCordination };
   }
+
+  async getRouteDistances(cityList: any[]) {
+    let totalDistance = 0;
+    let results: any[] = [];
+
+    for (let i = 0; i < cityList.length - 1; i++) {
+      const origin = cityList[i];
+      const destination = cityList[i + 1];
+
+      const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.City?.name || origin}&destinations=${destination.City?.name || destination}&units=metric&key=${this.apiKey}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const distanceMeters = data.rows[0].elements[0].distance.value;
+      const distanceKm = distanceMeters / 1000;
+
+      totalDistance += distanceKm;
+
+      // Calculate time duration between points
+      const originTotalMins =
+        (origin.days || 0) * 24 * 60 +
+        (origin.hours || 0) * 60 +
+        (origin.mins || 0);
+      const destTotalMins =
+        (destination.days || 0) * 24 * 60 +
+        (destination.hours || 0) * 60 +
+        (destination.mins || 0);
+      let diffMins = destTotalMins - originTotalMins;
+      if (diffMins < 0) diffMins = 0;
+      const durationHours = Math.floor(diffMins / 60);
+      const durationMins = diffMins % 60;
+
+      results.push({
+        from: origin.City?.name || origin,
+        to: destination.City?.name || destination,
+        km: distanceKm,
+        duration: { hours: durationHours, mins: durationMins },
+      });
+    }
+
+    const addedPrentage = results.map((eachResult) => {
+      return {
+        ...eachResult,
+        percentage: (eachResult.km / totalDistance) * 100,
+      };
+    });
+
+    return { results: addedPrentage, totalDistance };
+  }
 }
